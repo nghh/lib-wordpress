@@ -2,7 +2,7 @@
 
 namespace Nghh\Lib\Wordpress;
 
-use function Nghh\Lib\Helper\parse_args;
+use function Nghh\Lib\Helper\func\parse_args;
 
 class Notice
 {

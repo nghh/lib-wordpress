@@ -37,7 +37,7 @@ Notice::instance()->success('Message', $dismisable = true);
 
 // Using helper function
 notice('Message'); // same as
-notice()->info('Message', $dismisable = true);
+notice()->info('Message', true);
 
 notice()->warn('Message', $dismisable = true);
 notice()->error('Message', $dismisable = true);

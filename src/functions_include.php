@@ -1,4 +1,5 @@
 <?php
-
-// Require Classes Helper Functions
-require __DIR__ . '/functions/classes.inc.php';
+// Require all functions from functions dir
+foreach (glob(__DIR__ . '/functions/*.inc.php') as $file) {
+    require $file;
+}

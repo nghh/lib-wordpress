@@ -1,5 +1,5 @@
 {
-    "name": "nghh/wordpress",
+    "name": "nghh/lib-wordpress",
     "type": "library",
     "description": "Libraray of PHP Utilities and Helper Classes for Wordpress",
     "keywords": [
@@ -17,7 +17,8 @@
     }],
     "require": {
         "php": ">=7.1",
-        "nghh/helper": "dev-master"
+        "wp-bootstrap/wp-bootstrap-navwalker": "^4.3",
+        "nghh/lib-helper": "dev-master"
     },
     "autoload": {
         "psr-4": {

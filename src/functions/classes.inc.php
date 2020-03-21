@@ -3,7 +3,7 @@
 namespace Nghh\Lib\Wordpress\Func;
 
 // Notice helper
-if (!function_exists('Notice')) {
+if (!function_exists('notice')) {
     function notice($msg = false)
     {
         if ($msg) {
