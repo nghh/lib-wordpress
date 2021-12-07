@@ -89,51 +89,51 @@ class Router
         $this->_bodyClasses[] = $controller['name'];
         $this->_bodyClasses[] = $controller['action'];
 
-        $controllerName = $this->_namesapce . '\Controllers\\' . ucfirst(camel_case($controller['name'])) . 'Controller';
-        $controllerAction = camel_case($controller['action']);
-        $controllerError = [
-            'error' => false,
-            'message' => ''
-        ];
-        // Check if Controller exists
-        if (!class_exists($controllerName)) {
-            if ($this->_env !== 'production') {
-                throw new \ErrorException('Controller ' . $controllerName . ' not found!');
-            } else {
-                logger('error')->error('Controller ' . $controllerName . ' not found!');
+        // $controllerName = $this->_namesapce . '\Controllers\\' . ucfirst(camel_case($controller['name'])) . 'Controller';
+        // $controllerAction = camel_case($controller['action']);
+        // $controllerError = [
+        //     'error' => false,
+        //     'message' => ''
+        // ];
+        // // Check if Controller exists
+        // if (!class_exists($controllerName)) {
+        //     if ($this->_env !== 'production') {
+        //         throw new \ErrorException('Controller ' . $controllerName . ' not found!');
+        //     } else {
+        //         logger('error')->error('Controller ' . $controllerName . ' not found!');
 
-                global $wp_query;
-                $wp_query->set_404();
-                status_header(404);
-                echo view('errors.404');
-                exit;
-            }
-        }
+        //         global $wp_query;
+        //         $wp_query->set_404();
+        //         status_header(404);
+        //         echo view('errors.404');
+        //         exit;
+        //     }
+        // }
 
-        // Init Controller
-        $controllerObject = new $controllerName();
+        // // Init Controller
+        // $controllerObject = new $controllerName();
 
-        // Check if Action exists
-        if (!is_callable(array($controllerObject, $controllerAction))) {
-            if ($this->_env !== 'production') {
-                throw new \ErrorException('Action ' . $controllerAction . ' doesn\'t exist in ' . $controllerName);
-            } else {
-                logger('error')->error('Action ' . $controllerAction . ' doesn\'t exist in ' . $controllerName);
+        // // Check if Action exists
+        // if (!is_callable(array($controllerObject, $controllerAction))) {
+        //     if ($this->_env !== 'production') {
+        //         throw new \ErrorException('Action ' . $controllerAction . ' doesn\'t exist in ' . $controllerName);
+        //     } else {
+        //         logger('error')->error('Action ' . $controllerAction . ' doesn\'t exist in ' . $controllerName);
 
-                global $wp_query;
-                $wp_query->set_404();
-                status_header(404);
-                echo view('errors.404');
-                exit;
-            }
-        }
+        //         global $wp_query;
+        //         $wp_query->set_404();
+        //         status_header(404);
+        //         echo view('errors.404');
+        //         exit;
+        //     }
+        // }
 
 
-        // ... call $handler with $vars
-        return call_user_func_array(
-            [$controllerObject, $controllerAction],
-            []
-        );
+        // // ... call $handler with $vars
+        // return call_user_func_array(
+        //     [$controllerObject, $controllerAction],
+        //     []
+        // );
     }
 
     private function _getArchiveController($wp_query)
