@@ -9,9 +9,9 @@ class Notice
 
     private static $_instance;
 
-    private array $_args;
+    private $_args;
 
-    private array $_notices;
+    private $_notices;
 
 
     public function __construct(array $args)

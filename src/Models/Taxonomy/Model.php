@@ -12,6 +12,10 @@ class Model
         $this->term = $term;
     }
 
+    public function id()
+    {
+        return $this->term->term_id;
+    }
     public function title()
     {
         return $this->term->name;
@@ -25,6 +29,11 @@ class Model
     public function description()
     {
         return $this->term->description;
+    }
+
+    public function permalink()
+    {
+        return get_term_link($this->term);
     }
 
     public function excerpt($length = 10)

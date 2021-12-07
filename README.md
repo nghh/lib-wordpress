@@ -1,6 +1,6 @@
 # Nghh Wordpress
 
-Libraray of PHP Utilities and Helper Classes for Wordpress
+Library of PHP Utilities and Helper Classes for Wordpress
 
 ---
 
@@ -26,16 +26,16 @@ $args = [
     'template' => '', // Html string (optional)
 ];
 
-// Init Admin Notices
+// Init Admin Notices in functions.php
 Notice::instance($args)->registerHooks();
 
-// Create notices
+// Create notices in your app
 Notice::instance()->info('Message', $dismisable = true);
 Notice::instance()->warn('Message', $dismisable = true);
 Notice::instance()->error('Message', $dismisable = true);
 Notice::instance()->success('Message', $dismisable = true);
 
-// Using helper function
+// or by using helper function
 notice('Message'); // same as
 notice()->info('Message', true);
 

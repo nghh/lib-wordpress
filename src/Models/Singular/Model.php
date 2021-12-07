@@ -2,15 +2,24 @@
 
 namespace Nghh\Lib\Wordpress\Models\Singular;
 
+use Nghh\Theme\Utils\Author;
+use Nghh\Lib\Wordpress\Image;
+
+use function Nghh\Lib\Wordpress\func\date;
+
 class Model
 {
 
-    protected $metaboxes;
+    public $image;
     protected $post;
-    protected $post_meta;
     protected $author;
-    protected $post_thumbnail;
-    protected $opengraph_defaults = [];
+    protected $opengraph_defaults = [
+        'title' => '',
+        'description' => '',
+        'image' => '',
+        'url' => '',
+        'type' => ''
+    ];
 
     public function __construct(\WP_Post $post)
     {
@@ -40,7 +49,7 @@ class Model
 
     public function date()
     {
-        // return __date($this->post->post_date);
+        return date($this->post->post_date);
     }
 
     // TODO: Default Excerpt length to config file
@@ -55,16 +64,9 @@ class Model
 
     public function content()
     {
-        // Must run through the_content filter so dynamic blocks will be rendered
+        // dd($this->sponsored());
+        // Must run through the_content filter so dynamic blocks will be rendered correctly
         return apply_filters('the_content', $this->post->post_content);
-    }
-
-    public function imageurl($size = 'thumbnail')
-    {
-        if (!$url = get_the_post_thumbnail_url($this->post, $size)) {
-            $url = 'https://picsum.photos/id/' . rand(1, 200) . '/1200/1200';
-        }
-        return $url;
     }
 
     public function permalink()
@@ -72,67 +74,39 @@ class Model
         return get_the_permalink($this->post);
     }
 
-    public function getPostThumbnail(string $size = 'thumnail')
+    public function image()
     {
-        $test = 0;
-    }
-
-    public function image(string $string = '')
-    {
-        /**
-         * $article->image() -> to retrieve the full Media Object
-         * $article->image(id) -> to get the id -> id, title, caption, description, mime, alt, copyright 
-         * $article->image(sizes.medium) -> to get image array [url, width, height]
-         */
-
-        // Get Infos about the post thumbnail
-        if (is_null($this->post_thumbnail)) {
-            // Get Image ID
-            $image_id = get_post_thumbnail_id($this->post->ID);
-            // Construct Media Object
-            // $this->post_thumbnail = new Media($image_id);
+        if (is_null($this->image)) {
+            if (0 === ($image_id = get_post_thumbnail_id($this->post))) {
+                return $this->image = false;
+            }
+            $this->image = new Image($image_id);
         }
 
-        return ($string) ? $this->post_thumbnail->get($string) : $this->post_thumbnail;
+        return $this->image;
     }
 
-    public function postMeta($key)
+    public function author()
     {
-        return $this->post_meta[$key];
-    }
+        if (is_null($this->author)) {
+            return $this->author = new Author((int) $this->post->post_author);
+        }
 
-    public function attachmentURL($id)
-    {
-        return wp_get_attachment_url($id);
-    }
-
-    public function attachmentType($id)
-    {
-        return get_post_mime_type($id);
+        return $this->author;
     }
 
     /**
-     * Returns Fields from ACF
+     * Returns the post_type string or boolean if post_type is passed to function
      *
-     * @param string $field
+     * @param string $post_type
      * @return void
      */
-    public function getField(string $field)
+    public function postType(string $post_type = '')
     {
-        if (function_exists('get_field')) {
-            return get_field($field);
+        if ($post_type) {
+            return ($this->post->post_type == $post_type);
         }
 
-        return false;
-    }
-
-    public function getAuthor()
-    {
-
-        // if (is_null($this->author)) {
-        //     return $this->author = new Author((int) $this->post->post_author);
-        // }
-
-        // return $this->_author;
+        return $this->post->post_type;
     }
 }

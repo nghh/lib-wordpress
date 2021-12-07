@@ -1,6 +1,6 @@
 <?php
 
-namespace Nghh\Lib\Wordpress\Func;
+namespace Nghh\Lib\Wordpress\func;
 
 // Notice helper
 if (!function_exists('notice')) {

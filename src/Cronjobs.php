@@ -2,20 +2,13 @@
 
 namespace Nghh\Lib\Wordpress;
 
-use function Nghh\Lib\Utils\Func\logger;
-use function Nghh\Lib\Wordpress\Func\notice;
-
 class Cronjobs
 {
-
+    private static $_instance;
     private $_cronjobs;
 
     public function __construct(array $config)
     {
-        // More Infos: 
-        // http://wordpress-hackers.1065353.n5.nabble.com/ALTERNATE-WP-CRON-Is-it-worth-it-tp39843p39846.html
-        // define('ALTERNATE_WP_CRON', true);
-
         $this->_cronjobs =  $config;
     }
 
@@ -24,16 +17,19 @@ class Cronjobs
         // Default WP Cron Intervals
         $wp_recurrences = ['twicedaily', 'daily', 'fortnightly', 'weekly', 'monthly'];
 
-        // Add Custom Cron Intervals
-        add_filter('cron_schedules', [$this, 'addCronIntervals']);
+        // Add Cron Schedules
+        add_filter('cron_schedules', [$this, 'addCronSchedules']);
 
-        // Add Action for scheduled events
+        // Schedule Events on each Pageload
+        add_action('wp', [$this, 'scheduleEvents']);
+
+        // Fire each scheduled event
         foreach ($this->_cronjobs as $recurrence => $cron) {
             add_action($cron['hook'], $cron['callback']);
         }
     }
 
-    public function addCronIntervals($schedules)
+    public function addCronSchedules($schedules)
     {
         foreach ($this->_cronjobs as $recurrence => $cron) {
             $schedules[$recurrence] = array(
@@ -44,24 +40,25 @@ class Cronjobs
 
         return $schedules;
     }
-    // Schedule events on activate theme/plugin
-    public static function activate(array $config)
-    {
-        notice()->success('Theme Cron Jobs added');
 
+    public function scheduleEvents()
+    {
+        // No Cronjobs Found
+        if (!$this->_cronjobs) {
+            return;
+        }
+
+        // Cron Defaults
         $cron_defaults = [
             'timestamp' => time(),
             'hook' => '',
             'args' => [],
         ];
 
-        if (!$cronjobs = __config($config)) {
-            logger('theme')->info('No Cronjobs found on activate theme');
-            return;
-        }
-
-        foreach ($cronjobs as $recurrence => $cron) {
+        // Loop each Cronjob
+        foreach ($this->_cronjobs as $recurrence => $cron) {
             $cron = wp_parse_args($cron, $cron_defaults);
+
             if (
                 !$recurrence ||
                 !$cron['hook']
@@ -81,13 +78,27 @@ class Cronjobs
     // Clear events on deactive theme/plugin
     public static function deactivate(array $config)
     {
-
-        notice()->success('Theme Cron Jobs cleared');
+        // notice()->success('Theme Cron Jobs cleared');
 
         $cronjobs = $config;
 
         foreach ($cronjobs as $cron) {
             wp_clear_scheduled_hook($cron['hook']);
         }
+    }
+
+    /**
+     * Singelton Function
+     *
+     * @param [type] $path
+     * @param array $available
+     * @return void
+     */
+    public static function instance(): object
+    {
+        if (is_null(static::$_instance)) {
+            return static::$_instance = new static();
+        }
+        return static::$_instance;
     }
 }

@@ -3,21 +3,29 @@
     "type": "library",
     "description": "Libraray of PHP Utilities and Helper Classes for Wordpress",
     "keywords": [
-        "php", "helper", "utilities"
+        "php",
+        "helper",
+        "utilities"
     ],
     "license": "MIT",
-    "authors": [{
-        "name": "Jan Reiland",
-        "email": "moin@nordgestalten.com",
-        "homepage": "https://github.com/nghh"
-    }],
-    "repositories": [{
-        "type": "path",
-        "url": "~/Development/composer/nghh/helper"
-    }],
+    "authors": [
+        {
+            "name": "Jan Reiland",
+            "email": "moin@nordgestalten.com",
+            "homepage": "https://github.com/nghh"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "~/Development/composer/nghh/helper"
+        }
+    ],
     "require": {
-        "php": ">=7.1",
+        "php": ">=7.2",
         "wp-bootstrap/wp-bootstrap-navwalker": "^4.3",
+        "enshrined/svg-sanitize": "^0.13",
+        "webonyx/graphql-php": "^14.1",
         "nghh/lib-helper": "dev-master"
     },
     "autoload": {
