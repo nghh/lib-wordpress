@@ -12,7 +12,8 @@
         {
             "name": "Jan Reiland",
             "email": "moin@nordgestalten.com",
-            "homepage": "https://github.com/nghh"
+            "homepage": "https://github.com/nghh",
+            "role": "Developer"
         }
     ],
     "repositories": [],
