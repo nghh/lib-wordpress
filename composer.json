@@ -1,7 +1,7 @@
 {
     "name": "nghh/lib-wordpress",
     "type": "library",
-    "description": "Libraray of PHP Utilities and Helper Classes for Wordpress",
+    "description": "Libraray of PHP Utilities and Helper Classes for NGHH Theme Framework",
     "keywords": [
         "php",
         "helper",
@@ -15,25 +15,16 @@
             "homepage": "https://github.com/nghh"
         }
     ],
-    "repositories": [
-        {
-            "type": "path",
-            "url": "~/Development/composer/nghh/helper"
-        }
-    ],
+    "repositories": [],
     "require": {
-        "php": ">=7.2",
-        "wp-bootstrap/wp-bootstrap-navwalker": "^4.3",
-        "enshrined/svg-sanitize": "^0.13",
-        "webonyx/graphql-php": "^14.1",
-        "nghh/lib-helper": "dev-master"
+        "php": ">=8.0"
     },
     "autoload": {
         "psr-4": {
             "Nghh\\Lib\\Wordpress\\": "src/"
         },
         "files": [
-            "src/functions_include.php"
+            "src/functions/_include.php"
         ]
     }
 }
