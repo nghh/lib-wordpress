@@ -42,7 +42,7 @@ $args = [
     'env'       => 'local'
 ];
 
-(new Router($args))->registerHooks();
+(new WP_Router($args))->registerHooks();
 
 // A controller can look like this e.g. Controllers/SingularController.php
 namespace Nghh\Theme\Controllers;
