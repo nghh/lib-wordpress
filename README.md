@@ -48,12 +48,14 @@ $args = [
 namespace Nghh\Theme\Controllers;
 
 use Nghh\Theme\Models\Post;
+use Nghh\Theme\Models\Page;
+use Nghh\Theme\Models\Attachment;
 
 class SingularController extends BaseController {
 
     public function page()
     {
-        echo $this->view('pages.singular.page', ['Post' => new Post()]);
+        echo $this->view('pages.singular.page', ['Page' => new Page()]);
     }
 
     public function post()
@@ -63,7 +65,7 @@ class SingularController extends BaseController {
 
     public function attachment()
     {
-        echo $this->view('pages.singular.attachment', ['Post' => new Post()]);
+        echo $this->view('pages.singular.attachment', ['Attachment' => new Attachment()]);
     }
 }
 
