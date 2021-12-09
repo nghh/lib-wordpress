@@ -74,7 +74,7 @@ There is a wp filter, where you can modify the controller and action
 ```php
 add_filter('nghh/lib/router', 'nghh_modify_controller', 10, 2);
 
-public function modifyController($controller, $wp_query)
+public function nghh_modify_controller($controller, $wp_query)
 {
     /**
      * $controller['name] = 'singular'
