@@ -7,6 +7,7 @@ Library of PHP Utilities and Helper Classes for Wordpress
 ## Table of Contents
 
 -   [WP Router](#wp-router)
+-   [Config](#config)
 
 ---
 
@@ -85,4 +86,31 @@ function nghh_modify_controller($controller, $wp_query)
 
     return $controller;
 }
+```
+
+---
+
+## Config
+
+Config class based on laravel config system.
+
+```php
+// functions.php
+use Nghh\Lib\Wordpress\Utils\Config;
+
+/**
+ * Init config class in your functions.php
+ * and pass full path to config dir and environemt
+ */
+Config::instance()->init('/path/to/config/dir', 'local');
+
+// config/app.php
+return [
+    'version' => '0.0.1'
+];
+
+// You can then get config data with helper class function like this:
+\Nghh\Lib\Wordpress\func\config('app.version');
+
+// => 0.0.1
 ```

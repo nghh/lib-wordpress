@@ -61,17 +61,15 @@ function mix(string $key, $path = 'assets', $manifest_filename = 'mix-manifest.j
 
 function path(string $path = '', string $file = null)
 {
-    // Check if Root Path is defined
-    if (!defined('NG_ROOT_PATH')) {
-        define('NG_ROOT_PATH', '');
-    }
+    // Get root path of theme
+    $root_path = get_stylesheet_directory();
 
     // Construct Absolute Path
     if ($path) {
         $path = str_replace('.', DIRECTORY_SEPARATOR, $path);
-        $path = NG_ROOT_PATH . DIRECTORY_SEPARATOR . $path;
+        $path = $root_path . DIRECTORY_SEPARATOR . $path;
     } else {
-        $path = NG_ROOT_PATH;
+        $path = $root_path;
     }
 
     // Add File
