@@ -1,4 +1,4 @@
-# Nghh Wordpress
+# Nghh nghh/lib-wordpress
 
 Library of PHP Utilities and Helper Classes for Wordpress
 
@@ -6,41 +6,66 @@ Library of PHP Utilities and Helper Classes for Wordpress
 
 ## Table of Contents
 
--   [Notice](#notice)
+-   [WP Router](#wp-router)
 
 ---
 
-## Notice
+## WP Router
 
-PHP Class to create and show notices in admin area of wordpress
+A MVC Router the Wordpress way. 
+This router works like the default wp template hierarchy.
+@see https://wphierarchy.com
+
+Currently you should have the following controllers and methods:
+
+SingularController::post()
+SingularController::page()
+SingularController::attachment()
+
+ArchiveController::category()
+ArchiveController::postTag()
+ArchiveController::author()
+
+ErrorController::error404()
+
+HomeController::static()
+HomeController::blog()
+
 
 ```php
+// in your theme e.g. functions.php
+use Nghh\Lib\Wordpress\Utils\WP_Router;
 
-use Nghh\Lib\Wordpress\Notice; // Using Class
-use function Nghh\Lib\Wordpress\Func\notice; // Using helper Function
-
-// Init Admin Notices with args
+// Optional args. If you use namespace, pass it like this
 $args = [
-    'transient_name' => '_ng_admin_notices', // (optional)
-    'date_format' => '', // date format (optional)
-    'template' => '', // Html string (optional)
+    'namespace' => __NAMESPACE__ . '\Controllers\\',
+    'env'       => 'local'
 ];
 
-// Init Admin Notices in functions.php
-Notice::instance($args)->registerHooks();
+(new Router($args))->registerHooks();
 
-// Create notices in your app
-Notice::instance()->info('Message', $dismisable = true);
-Notice::instance()->warn('Message', $dismisable = true);
-Notice::instance()->error('Message', $dismisable = true);
-Notice::instance()->success('Message', $dismisable = true);
+// A controller can look like this e.g. Controllers/SingularController.php
 
-// or by using helper function
-notice('Message'); // same as
-notice()->info('Message', true);
+namespace Nghh\Theme\Controllers;
 
-notice()->warn('Message', $dismisable = true);
-notice()->error('Message', $dismisable = true);
-notice()->success('Message', $dismisable = true);
+use Nghh\Theme\Models\Post;
+
+class SingularController extends BaseController {
+
+    public function page()
+    {
+        echo $this->view('pages.singular.page', ['Post' => new Post()]);
+    }
+
+    public function post()
+    {
+        echo $this->view('pages.singular.post', ['Post' => new Post()]);
+    }
+
+    public function attachment()
+    {
+        echo $this->view('pages.singular.attachment', ['Post' => new Post()]);
+    }
+}
 
 ```

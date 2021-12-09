@@ -1,11 +1,12 @@
 {
     "name": "nghh/lib-wordpress",
     "type": "library",
-    "description": "Libraray of PHP Utilities and Helper Classes for NGHH Theme Framework",
+    "description": "WIP – full libraray of wordpress utilities and helper for theme development coming soon",
     "keywords": [
-        "php",
+        "library",
         "helper",
-        "utilities"
+        "utilities", 
+        "wordpress"
     ],
     "license": "MIT",
     "authors": [

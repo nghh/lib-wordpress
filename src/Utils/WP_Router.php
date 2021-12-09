@@ -1,28 +1,31 @@
 <?php
 
-namespace Nghh\Theme\Utils;
+namespace Nghh\Lib\Wordpress\Utils;
 
-use function Nghh\Lib\Helper\func\camel_case;
-use function Nghh\Lib\Utils\func\logger;
-use function Nghh\Theme\func\view;
+use function Nghh\Lib\Wordpress\func\camelcase;
 
-class Router
+class WP_Router
 {
 
     private $_namesapce;
     private $_env;
-    private $_bodyClasses = [];
 
-    public function __construct(string $namespace, $env = 'production')
+    public function __construct($args = [])
     {
-        $this->_namesapce = $namespace;
-        $this->_env = $env;
+        $default_args = [
+            'namespace' => '', 
+            'env' => 'production'
+        ];
+
+        $args = wp_parse_args($args, $default_args);
+
+        $this->_namesapce = $args['namespace'];
+        $this->_env = $args['env'];
     }
 
     public function registerHooks()
     {
         add_filter('template_include', [$this, 'parseQuery'], 99);
-        add_filter('body_class', [$this, 'bodyClass']);
     }
 
     /**
@@ -72,68 +75,44 @@ class Router
             $controller['action'] = 'index';
         }
 
+        // apply WP filter
+        $controller = apply_filters('nghh/lib/router', $controller, $wp_query);
+
+        // namespaced controller 
+        $controller['name']  = $this->_namesapce . ucfirst(camelcase($controller['name'])) . 'Controller';
+        // controller metthod
+        $controller['action'] = camelcase($controller['action']);
+        
+        // try to call controller
         $this->_callController($controller);
+
         exit;
-    }
-
-    public function bodyClass($classes)
-    {
-        // Reset Classes
-        $classes = $this->_bodyClasses;
-
-        return $classes;
     }
 
     private function _callController($controller)
     {
-        $this->_bodyClasses[] = $controller['name'];
-        $this->_bodyClasses[] = $controller['action'];
+        /**
+         * TODO: If in production mode call 404 error rather new exception
+         */
 
-        // $controllerName = $this->_namesapce . '\Controllers\\' . ucfirst(camel_case($controller['name'])) . 'Controller';
-        // $controllerAction = camel_case($controller['action']);
-        // $controllerError = [
-        //     'error' => false,
-        //     'message' => ''
-        // ];
-        // // Check if Controller exists
-        // if (!class_exists($controllerName)) {
-        //     if ($this->_env !== 'production') {
-        //         throw new \ErrorException('Controller ' . $controllerName . ' not found!');
-        //     } else {
-        //         logger('error')->error('Controller ' . $controllerName . ' not found!');
+        // Check if Controller exists
+        if (!class_exists($controller['name'])) {
+            throw new \ErrorException('Controller ' . $controller['name'] . ' not found!');
+        }
 
-        //         global $wp_query;
-        //         $wp_query->set_404();
-        //         status_header(404);
-        //         echo view('errors.404');
-        //         exit;
-        //     }
-        // }
+        // Init Controller
+        $controllerObject = new $controller['name']();
 
-        // // Init Controller
-        // $controllerObject = new $controllerName();
+        // Check if Action exists
+        if (!is_callable(array($controllerObject, $controller['action']))) {
+            throw new \ErrorException('Action ' . $controller['action'] . ' doesn\'t exist in ' . $controller['name']);
+        }
 
-        // // Check if Action exists
-        // if (!is_callable(array($controllerObject, $controllerAction))) {
-        //     if ($this->_env !== 'production') {
-        //         throw new \ErrorException('Action ' . $controllerAction . ' doesn\'t exist in ' . $controllerName);
-        //     } else {
-        //         logger('error')->error('Action ' . $controllerAction . ' doesn\'t exist in ' . $controllerName);
-
-        //         global $wp_query;
-        //         $wp_query->set_404();
-        //         status_header(404);
-        //         echo view('errors.404');
-        //         exit;
-        //     }
-        // }
-
-
-        // // ... call $handler with $vars
-        // return call_user_func_array(
-        //     [$controllerObject, $controllerAction],
-        //     []
-        // );
+        // ... call $handler with $vars
+        return call_user_func_array(
+            [$controllerObject, $controller['action']],
+            []
+        );
     }
 
     private function _getArchiveController($wp_query)
