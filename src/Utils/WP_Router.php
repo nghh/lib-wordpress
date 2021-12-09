@@ -56,13 +56,13 @@ class WP_Router
         }
         // Frontpage
         elseif ($wp_query->is_front_page()) {
-            $controller['name'] = 'home';
-            $controller['action'] = 'static';
+            $controller['name'] = 'index';
+            $controller['action'] = 'frontPage';
         }
         // Blog Home
         elseif ($wp_query->is_home()) {
-            $controller['name'] = 'home';
-            $controller['action'] = 'blog';
+            $controller['name'] = 'index';
+            $controller['action'] = 'home';
         }
         // Error
         elseif ($wp_query->is_404()) {
