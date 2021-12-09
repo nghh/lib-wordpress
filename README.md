@@ -13,22 +13,22 @@ Library of PHP Utilities and Helper Classes for Wordpress
 ## WP Router
 
 A MVC Router the Wordpress way. 
-This router works like the default wp template hierarchy.
+This router works like the default wp template hierarchy.  
 @see https://wphierarchy.com
 
 Currently you should have the following controllers and methods:
 
-SingularController::post()
-SingularController::page()
+SingularController::post()  
+SingularController::page()  
 SingularController::attachment()
 
-ArchiveController::category()
-ArchiveController::postTag()
+ArchiveController::category()  
+ArchiveController::postTag()  
 ArchiveController::author()
 
 ErrorController::error404()
 
-HomeController::static()
+HomeController::static()  
 HomeController::blog()
 
 
@@ -45,7 +45,6 @@ $args = [
 (new Router($args))->registerHooks();
 
 // A controller can look like this e.g. Controllers/SingularController.php
-
 namespace Nghh\Theme\Controllers;
 
 use Nghh\Theme\Models\Post;
