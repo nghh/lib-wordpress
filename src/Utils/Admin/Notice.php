@@ -1,6 +1,6 @@
 <?php
 
-namespace Nghh\Lib\Wordpress\Ultis\Admin;
+namespace Nghh\Lib\Wordpress\Utils\Admin;
 
 class Notice {
 
@@ -17,6 +17,7 @@ class Notice {
             'transient_name' => '_ng_admin_notices',
             'date_format' => false,
             'template' => $this->_template(),
+            'title' => get_bloginfo('name')
         ];
 
         $this->_args = wp_parse_args($args, $default_args);
@@ -66,7 +67,7 @@ class Notice {
                 $this->_template(),
                 esc_attr($notice['class']),
                 esc_attr($dismissible),
-                get_bloginfo('name'),
+                $this->_args['title'],
                 date_i18n($date_format),
                 $message
             );

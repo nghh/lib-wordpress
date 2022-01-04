@@ -45,7 +45,7 @@ class WP_Router
             'name' => '',
             'action' => ''
         ];
-
+        
         // Archive
         if ($wp_query->is_archive()) {
             $controller = $this->_getArchiveController($wp_query);
@@ -53,11 +53,6 @@ class WP_Router
         // Singular
         elseif ($wp_query->is_singular()) {
             $controller = $this->_getSingularController($wp_query);
-        }
-        // Frontpage
-        elseif ($wp_query->is_front_page()) {
-            $controller['name'] = 'index';
-            $controller['action'] = 'frontPage';
         }
         // Blog Home
         elseif ($wp_query->is_home()) {
@@ -82,22 +77,26 @@ class WP_Router
         $controller['name']  = $this->_namesapce . ucfirst(camelcase($controller['name'])) . 'Controller';
         // controller metthod
         $controller['action'] = camelcase($controller['action']);
-        
         // try to call controller
-        $this->_callController($controller);
+        $this->_callController($controller, $template, $wp_query);
 
         exit;
     }
 
-    private function _callController($controller)
+    private function _callController($controller, $template, $wp_query)
     {
-        /**
-         * TODO: If in production mode call 404 error rather new exception
-         */
-
         // Check if Controller exists
         if (!class_exists($controller['name'])) {
-            throw new \ErrorException('Controller ' . $controller['name'] . ' not found!');
+            // Get 404 Page if in production
+            if('production' === $this->_env) {
+                $wp_query->set_404();
+                status_header(404);
+                nocache_headers();
+                $this->parseQuery($template);
+                exit;
+            } else {
+                throw new \ErrorException('Controller ' . $controller['name'] . ' not found!');
+            }
         }
 
         // Init Controller
@@ -105,7 +104,16 @@ class WP_Router
 
         // Check if Action exists
         if (!is_callable(array($controllerObject, $controller['action']))) {
-            throw new \ErrorException('Action ' . $controller['action'] . ' doesn\'t exist in ' . $controller['name']);
+            // Get 404 Page if in production
+            if ('production' === $this->_env) {
+                $wp_query->set_404();
+                status_header(404);
+                nocache_headers();
+                $this->parseQuery($template);
+                exit;
+            } else {
+                throw new \ErrorException('Action ' . $controller['action'] . ' doesn\'t exist in ' . $controller['name']);
+            }
         }
 
         // ... call $handler with $vars
@@ -141,9 +149,16 @@ class WP_Router
 
     private function _getSingularController($wp_query)
     {
-        return [
-            'name' => 'singular',
-            'action' => $wp_query->queried_object->post_type
-        ];
+        $controller = [];
+
+        // Frontpage
+        if ($wp_query->is_front_page()) {
+            $controller['name'] = 'index';
+            $controller['action'] = 'frontPage';
+        } else {
+            $controller['name'] = 'singular';
+            $controller['action'] = $wp_query->queried_object->post_type;
+        }
+        return $controller;
     }
 }
